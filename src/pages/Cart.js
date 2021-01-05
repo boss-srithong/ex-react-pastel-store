@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Table } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 
-const { Title } = Typography;
+const { Title , Text } = Typography;
 
 const Cart = ({ cart }) => {
 
@@ -38,10 +38,9 @@ const Cart = ({ cart }) => {
             title: 'Action',
             dataIndex: '',
             key: 'id',
-            render: (id) => <a onClick={ () => console.log(id)}>Delete</a>,
+            render: (cart) => <a onClick={ () => console.log(cart.id)}>Delete</a>,
           },
       ];
-    console.log('----->', cart)
     return (
         <>
             <div className={"app-header"}>
@@ -53,8 +52,25 @@ const Cart = ({ cart }) => {
             <Table 
                 columns={columns}
                 dataSource={cart}
-            >
-            </Table>
+                summary={cart => {
+                    let initialValue = 0;
+                    let sumTotal = cart.reduce(function (total, currentValue) {
+                        return total + (currentValue.price*currentValue.quantity);
+                    }, initialValue);
+                    
+            
+                    return (
+                      <>
+                        <Table.Summary.Row>
+                          <Table.Summary.Cell colSpan={5}>Total</Table.Summary.Cell>
+                          <Table.Summary.Cell>
+                            <Text>{sumTotal}</Text>
+                          </Table.Summary.Cell>
+                        </Table.Summary.Row>
+                      </>
+                    );
+                  }}
+                />
             </div>
         </>
     )
